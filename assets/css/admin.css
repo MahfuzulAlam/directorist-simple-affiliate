@@ -2,8 +2,76 @@
  * Directorist Simple Affiliate - Admin Styles
  */
 
+.dsa-simple-affiliate {
+    max-width: 1200px;
+}
+
+/* Tab Navigation */
+.dsa-tab-wrapper {
+    display: flex;
+    border-bottom: 1px solid #ccd0d4;
+    margin: 20px 0 0 0;
+    padding: 0;
+    background: #fff;
+}
+
+.dsa-tab {
+    display: inline-block;
+    padding: 12px 20px;
+    margin: 0;
+    text-decoration: none;
+    color: #646970;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    border-bottom: 3px solid transparent;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    top: 1px;
+}
+
+.dsa-tab:hover {
+    color: #2271b1;
+    background: #f6f7f7;
+}
+
+.dsa-tab.dsa-tab-active {
+    color: #2271b1;
+    border-bottom-color: #2271b1;
+    background: #fff;
+}
+
+.dsa-tab-content {
+    background: #fff;
+    padding: 20px;
+}
+
+.dsa-tab-panel {
+    display: block;
+}
+
+.dsa-overview-content {
+    padding: 20px;
+    background: #f6f7f7;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+}
+
 .dsa-affiliate-requests {
     max-width: 1200px;
+}
+
+.dsa-notice {
+    padding: 0px 15px;
+    background: #f6f7f7;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+}
+
+.dsa-notice-info {
+    border-left: 4px solid #2271b1;
 }
 
 .dsa-requests-list {

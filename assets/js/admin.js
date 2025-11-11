@@ -5,6 +5,11 @@
     'use strict';
 
     $(document).ready(function() {
+        // Tab switching (if needed for future enhancements)
+        $('.dsa-tab').on('click', function(e) {
+            // Let the link handle navigation naturally
+            // This is here for potential future AJAX tab loading
+        });
         // Handle approve button click
         $('.dsa-approve-btn').on('click', function(e) {
             e.preventDefault();

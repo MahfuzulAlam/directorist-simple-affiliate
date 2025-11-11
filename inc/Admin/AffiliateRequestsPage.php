@@ -25,10 +25,10 @@ class AffiliateRequestsPage
     {
         add_submenu_page(
             'edit.php?post_type=at_biz_dir',
-            __('Affiliate Requests', 'directorist-simple-affiliate'),
-            __('Affiliate Requests', 'directorist-simple-affiliate'),
+            __('Simple Affiliate', 'directorist-simple-affiliate'),
+            __('Simple Affiliate', 'directorist-simple-affiliate'),
             'manage_options',
-            'dsa-affiliate-requests',
+            'dsa-simple-affiliate',
             [__CLASS__, 'render_page']
         );
     }
@@ -40,8 +40,8 @@ class AffiliateRequestsPage
      */
     public static function enqueue_scripts($hook)
     {
-        // Check if we're on the affiliate requests page
-        if (strpos($hook, 'dsa-affiliate-requests') === false) {
+        // Check if we're on the simple affiliate page
+        if (strpos($hook, 'dsa-simple-affiliate') === false) {
             return;
         }
 
@@ -125,34 +125,89 @@ class AffiliateRequestsPage
     }
 
     /**
-     * Render the admin page
+     * Get current active tab
+     *
+     * @return string
+     */
+    private static function get_current_tab()
+    {
+        return isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : 'overview';
+    }
+
+    /**
+     * Render the admin page with tabs
      */
     public static function render_page()
     {
         // Handle actions
         self::handle_actions();
 
+        $current_tab = self::get_current_tab();
+        $tabs = [
+            'overview' => __('Overview', 'directorist-simple-affiliate'),
+            'requests' => __('Affiliate Requests', 'directorist-simple-affiliate'),
+        ];
+
+        ?>
+        <div class="wrap dsa-simple-affiliate">
+            <h1 class="wp-heading-inline"><?php esc_html_e('Simple Affiliate', 'directorist-simple-affiliate'); ?></h1>
+            <hr class="wp-header-end">
+
+            <nav class="dsa-tab-wrapper">
+                <?php foreach ($tabs as $tab_key => $tab_label): ?>
+                    <a href="<?php echo esc_url(add_query_arg('tab', $tab_key, admin_url('edit.php?post_type=at_biz_dir&page=dsa-simple-affiliate'))); ?>" 
+                       class="dsa-tab <?php echo $current_tab === $tab_key ? 'dsa-tab-active' : ''; ?>">
+                        <?php echo esc_html($tab_label); ?>
+                    </a>
+                <?php endforeach; ?>
+            </nav>
+
+            <div class="dsa-tab-content">
+                <?php
+                switch ($current_tab) {
+                    case 'requests':
+                        self::render_requests_tab();
+                        break;
+                    case 'overview':
+                    default:
+                        self::render_overview_tab();
+                        break;
+                }
+                ?>
+            </div>
+        </div>
+        <?php
+    }
+
+    /**
+     * Render Overview tab
+     */
+    private static function render_overview_tab()
+    {
+        $template_path = DSA_PLUGIN_DIR . 'templates/admin/overview-tab.php';
+        if (file_exists($template_path)) {
+            include $template_path;
+        } else {
+            ?>
+            <div class="dsa-tab-panel">
+                <p><?php esc_html_e('Overview content coming soon...', 'directorist-simple-affiliate'); ?></p>
+            </div>
+            <?php
+        }
+    }
+
+    /**
+     * Render Affiliate Requests tab
+     */
+    private static function render_requests_tab()
+    {
         $affiliate_manager = AffiliateManager::get_instance();
         $affiliates = $affiliate_manager->get_affiliates('pending');
 
-        ?>
-        <div class="wrap dsa-affiliate-requests">
-            <h1 class="wp-heading-inline"><?php esc_html_e('Affiliate Requests', 'directorist-simple-affiliate'); ?></h1>
-            <hr class="wp-header-end">
-
-            <?php if (empty($affiliates)): ?>
-                <div class="notice notice-info">
-                    <p><?php esc_html_e('No pending affiliate requests.', 'directorist-simple-affiliate'); ?></p>
-                </div>
-            <?php else: ?>
-                <div class="dsa-requests-list">
-                    <?php foreach ($affiliates as $affiliate): ?>
-                        <?php self::render_affiliate_card($affiliate, $affiliate_manager); ?>
-                    <?php endforeach; ?>
-                </div>
-            <?php endif; ?>
-        </div>
-        <?php
+        $template_path = DSA_PLUGIN_DIR . 'templates/admin/affiliate-requests-tab.php';
+        if (file_exists($template_path)) {
+            include $template_path;
+        }
     }
 
     /**
@@ -161,7 +216,7 @@ class AffiliateRequestsPage
      * @param array $affiliate Affiliate data
      * @param AffiliateManager $affiliate_manager
      */
-    private static function render_affiliate_card($affiliate, $affiliate_manager)
+    public static function render_affiliate_card($affiliate, $affiliate_manager)
     {
         $user = get_userdata($affiliate['user_id']);
         
