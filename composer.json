@@ -1,0 +1,24 @@
+{
+    "name": "directorist/simple-affiliate",
+    "description": "Monetize your Directorist directory with a powerful affiliate program",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Your Name",
+            "email": "your.email@example.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "DirectoristSimpleAffiliate\\": "inc/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true
+    }
+}
+
