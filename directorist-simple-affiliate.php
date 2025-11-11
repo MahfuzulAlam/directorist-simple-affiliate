@@ -51,5 +51,6 @@ register_activation_hook(__FILE__, function() {
 // Deactivation hook
 register_deactivation_hook(__FILE__, function() {
     // Cleanup if needed
+    //\DirectoristSimpleAffiliate\Database\TableManager::drop_tables();
 });
 

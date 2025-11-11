@@ -32,6 +32,7 @@ class AffiliateVisitsTable
         $sql = "CREATE TABLE IF NOT EXISTS {$table_name} (
             id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
             affiliate_id bigint(20) UNSIGNED NOT NULL,
+            code_id bigint(20) UNSIGNED DEFAULT NULL,
             ip_address varchar(45) DEFAULT NULL,
             user_agent text DEFAULT NULL,
             referrer_url text DEFAULT NULL,
@@ -40,6 +41,7 @@ class AffiliateVisitsTable
             created_at datetime NOT NULL,
             PRIMARY KEY (id),
             KEY affiliate_id (affiliate_id),
+            KEY code_id (code_id),
             KEY converted (converted),
             KEY created_at (created_at)
         ) {$charset_collate};";

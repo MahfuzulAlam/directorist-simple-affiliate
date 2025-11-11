@@ -3,6 +3,7 @@
 namespace DirectoristSimpleAffiliate\Core;
 
 use DirectoristSimpleAffiliate\Database\Managers\AffiliatesManager;
+use DirectoristSimpleAffiliate\Database\Managers\AffiliateCodesManager;
 
 /**
  * Centralized class for managing affiliate users using WordPress user meta
@@ -13,14 +14,10 @@ class AffiliateManager
     /**
      * User meta keys
      */
-    const META_KEY_STATUS = 'dsa_affiliate_status';
-    const META_KEY_CODE = 'dsa_affiliate_code';
     const META_KEY_REGISTERED_AT = 'dsa_affiliate_registered_at';
-    const META_KEY_PAYMENT_EMAIL = 'dsa_affiliate_payment_email';
-    const META_KEY_PAYMENT_METHOD = 'dsa_affiliate_payment_method';
     const META_KEY_WEBSITE = 'dsa_website';
     const META_KEY_PHONE = 'dsa_phone';
-    const META_KEY_PROMOTION_METHOD = 'dsa_promotion_method';
+    const META_KEY_PAYMENT_METHOD = 'dsa_affiliate_payment_method';
     const META_KEY_PAYPAL_EMAIL = 'dsa_paypal_email';
     const META_KEY_BANK_DETAILS = 'dsa_bank_details';
 
@@ -78,23 +75,19 @@ class AffiliateManager
             );
         }
 
-        // Generate unique affiliate code
-        $affiliate_code = $this->generate_affiliate_code();
-
         // Get default commission rate
         $default_commission_rate = apply_filters('dsa_default_commission_rate', 10.00);
 
         // Prepare affiliate data
         $status = isset($data['status']) ? $data['status'] : self::STATUS_PENDING;
-        $payment_email = isset($data['payment_email']) ? sanitize_email($data['payment_email']) : '';
-        $payment_method = isset($data['payment_method']) ? sanitize_text_field($data['payment_method']) : '';
 
-        // Set user meta
-        update_user_meta($user_id, self::META_KEY_STATUS, $status);
-        update_user_meta($user_id, self::META_KEY_CODE, $affiliate_code);
+        // Set user meta (only non-database fields)
         update_user_meta($user_id, self::META_KEY_REGISTERED_AT, current_time('mysql'));
-        update_user_meta($user_id, self::META_KEY_PAYMENT_EMAIL, $payment_email);
-        update_user_meta($user_id, self::META_KEY_PAYMENT_METHOD, $payment_method);
+
+        // Store payment method in user meta (not in database table)
+        if (isset($data['payment_method'])) {
+            update_user_meta($user_id, self::META_KEY_PAYMENT_METHOD, sanitize_text_field($data['payment_method']));
+        }
 
         // Store additional data
         if (isset($data['website'])) {
@@ -102,9 +95,6 @@ class AffiliateManager
         }
         if (isset($data['phone'])) {
             update_user_meta($user_id, self::META_KEY_PHONE, sanitize_text_field($data['phone']));
-        }
-        if (isset($data['promotion_method'])) {
-            update_user_meta($user_id, self::META_KEY_PROMOTION_METHOD, sanitize_textarea_field($data['promotion_method']));
         }
         if (isset($data['paypal_email'])) {
             update_user_meta($user_id, self::META_KEY_PAYPAL_EMAIL, sanitize_email($data['paypal_email']));
@@ -116,10 +106,7 @@ class AffiliateManager
         // Insert into database table
         $affiliate_data = [
             'user_id' => $user_id,
-            'affiliate_code' => $affiliate_code,
             'status' => $status,
-            'payment_email' => $payment_email,
-            'payment_method' => $payment_method,
             'commission_rate' => $default_commission_rate,
         ];
 
@@ -145,12 +132,11 @@ class AffiliateManager
         }
 
         // Trigger action hook
-        do_action('dsa_affiliate_registered', $user_id, $affiliate_code, $status);
+        do_action('dsa_affiliate_registered', $user_id, $status);
 
         return [
             'success' => true,
             'user_id' => $user_id,
-            'affiliate_code' => $affiliate_code,
             'status' => $status,
         ];
     }
@@ -171,8 +157,9 @@ class AffiliateManager
             return false;
         }
 
-        $status = get_user_meta($user_id, self::META_KEY_STATUS, true);
-        return !empty($status) && in_array($status, [self::STATUS_PENDING, self::STATUS_ACTIVE, self::STATUS_SUSPENDED, self::STATUS_REJECTED]);
+        // Check database table instead of user meta
+        $affiliate = AffiliatesManager::get_by_user_id($user_id);
+        return !empty($affiliate);
     }
 
     /**
@@ -187,11 +174,13 @@ class AffiliateManager
             $user_id = get_current_user_id();
         }
 
-        if (!$user_id || !$this->is_affiliate($user_id)) {
+        if (!$user_id) {
             return false;
         }
 
-        return get_user_meta($user_id, self::META_KEY_STATUS, true);
+        // Get status from database table
+        $affiliate = AffiliatesManager::get_by_user_id($user_id);
+        return $affiliate ? $affiliate->status : false;
     }
 
     /**
@@ -232,13 +221,15 @@ class AffiliateManager
 
         $old_status = $this->get_affiliate_status($user_id);
 
-        // Update user meta
-        update_user_meta($user_id, self::META_KEY_STATUS, $status);
-
-        // Update database table
+        // Update database table (status is stored in database, not user meta)
         $affiliate = AffiliatesManager::get_by_user_id($user_id);
         if ($affiliate) {
             AffiliatesManager::update($affiliate->id, ['status' => $status]);
+        } else {
+            return new \WP_Error(
+                'not_found',
+                __('Affiliate record not found in database.', 'directorist-simple-affiliate')
+            );
         }
 
         // Store reason if provided
@@ -291,7 +282,9 @@ class AffiliateManager
     }
 
     /**
-     * Get affiliate code by user ID
+     * Get default affiliate code by user ID
+     * Note: Codes are now managed in the separate affiliate_codes table
+     * This method returns the first active code for the affiliate
      *
      * @param int|null $user_id User ID (null for current user)
      * @return string|false Affiliate code or false
@@ -306,25 +299,16 @@ class AffiliateManager
             return false;
         }
 
-        return get_user_meta($user_id, self::META_KEY_CODE, true);
-    }
+        // Get affiliate record to get affiliate_id
+        $affiliate = AffiliatesManager::get_by_user_id($user_id);
+        if (!$affiliate) {
+            return false;
+        }
 
-    /**
-     * Find user ID by affiliate code
-     *
-     * @param string $affiliate_code
-     * @return int|false User ID or false
-     */
-    public function get_user_by_affiliate_code($affiliate_code)
-    {
-        $users = get_users([
-            'meta_key' => self::META_KEY_CODE,
-            'meta_value' => $affiliate_code,
-            'number' => 1,
-            'fields' => 'ID',
-        ]);
-
-        return !empty($users) ? (int) $users[0] : false;
+        // Get default code from affiliate_codes table
+        $codes = AffiliateCodesManager::get_by_affiliate_id($affiliate->id, ['status' => 'active', 'type' => 'default', 'limit' => 1]);
+        
+        return !empty($codes) ? $codes[0]->code : false;
     }
 
     /**
@@ -348,18 +332,21 @@ class AffiliateManager
             return false;
         }
 
+        // Get affiliate record from database
+        $affiliate = AffiliatesManager::get_by_user_id($user_id);
+        if (!$affiliate) {
+            return false;
+        }
+
         return [
             'user_id' => $user_id,
             'user_email' => $user->user_email,
             'display_name' => $user->display_name,
-            'status' => get_user_meta($user_id, self::META_KEY_STATUS, true),
-            'affiliate_code' => get_user_meta($user_id, self::META_KEY_CODE, true),
+            'status' => $affiliate->status,
             'registered_at' => get_user_meta($user_id, self::META_KEY_REGISTERED_AT, true),
-            'payment_email' => get_user_meta($user_id, self::META_KEY_PAYMENT_EMAIL, true),
             'payment_method' => get_user_meta($user_id, self::META_KEY_PAYMENT_METHOD, true),
             'website' => get_user_meta($user_id, self::META_KEY_WEBSITE, true),
             'phone' => get_user_meta($user_id, self::META_KEY_PHONE, true),
-            'promotion_method' => get_user_meta($user_id, self::META_KEY_PROMOTION_METHOD, true),
             'paypal_email' => get_user_meta($user_id, self::META_KEY_PAYPAL_EMAIL, true),
             'bank_details' => get_user_meta($user_id, self::META_KEY_BANK_DETAILS, true),
         ];
@@ -374,29 +361,17 @@ class AffiliateManager
      */
     public function get_affiliates($status = '', $args = [])
     {
-        $meta_query = [
-            [
-                'key' => self::META_KEY_STATUS,
-                'compare' => 'EXISTS',
-            ],
-        ];
-
+        // Get affiliates from database table
+        $db_args = [];
         if (!empty($status)) {
-            $meta_query[0]['value'] = $status;
-            $meta_query[0]['compare'] = '=';
+            $db_args['status'] = $status;
         }
-
-        $defaults = [
-            'meta_query' => $meta_query,
-            'number' => -1,
-        ];
-
-        $query_args = wp_parse_args($args, $defaults);
-        $users = get_users($query_args);
-
+        
+        $db_affiliates = AffiliatesManager::get_all($db_args);
+        
         $affiliates = [];
-        foreach ($users as $user) {
-            $affiliate_data = $this->get_affiliate_data($user->ID);
+        foreach ($db_affiliates as $db_affiliate) {
+            $affiliate_data = $this->get_affiliate_data($db_affiliate->user_id);
             if ($affiliate_data) {
                 $affiliates[] = $affiliate_data;
             }
@@ -413,25 +388,13 @@ class AffiliateManager
      */
     public function count_affiliates($status = '')
     {
-        $meta_query = [
-            [
-                'key' => self::META_KEY_STATUS,
-                'compare' => 'EXISTS',
-            ],
-        ];
-
+        // Count from database table
+        $args = [];
         if (!empty($status)) {
-            $meta_query[0]['value'] = $status;
-            $meta_query[0]['compare'] = '=';
+            $args['status'] = $status;
         }
-
-        $users = get_users([
-            'meta_query' => $meta_query,
-            'count_total' => true,
-            'number' => 0,
-        ]);
-
-        return $users;
+        
+        return AffiliatesManager::count($args);
     }
 
     /**
@@ -450,10 +413,7 @@ class AffiliateManager
             );
         }
 
-        // Update user meta
-        if (isset($data['payment_email'])) {
-            update_user_meta($user_id, self::META_KEY_PAYMENT_EMAIL, sanitize_email($data['payment_email']));
-        }
+        // Update user meta (only non-database fields)
         if (isset($data['payment_method'])) {
             update_user_meta($user_id, self::META_KEY_PAYMENT_METHOD, sanitize_text_field($data['payment_method']));
         }
@@ -463,29 +423,11 @@ class AffiliateManager
         if (isset($data['phone'])) {
             update_user_meta($user_id, self::META_KEY_PHONE, sanitize_text_field($data['phone']));
         }
-        if (isset($data['promotion_method'])) {
-            update_user_meta($user_id, self::META_KEY_PROMOTION_METHOD, sanitize_textarea_field($data['promotion_method']));
-        }
         if (isset($data['paypal_email'])) {
             update_user_meta($user_id, self::META_KEY_PAYPAL_EMAIL, sanitize_email($data['paypal_email']));
         }
         if (isset($data['bank_details'])) {
             update_user_meta($user_id, self::META_KEY_BANK_DETAILS, sanitize_textarea_field($data['bank_details']));
-        }
-
-        // Update database table
-        $affiliate = AffiliatesManager::get_by_user_id($user_id);
-        if ($affiliate) {
-            $db_data = [];
-            if (isset($data['payment_email'])) {
-                $db_data['payment_email'] = sanitize_email($data['payment_email']);
-            }
-            if (isset($data['payment_method'])) {
-                $db_data['payment_method'] = sanitize_text_field($data['payment_method']);
-            }
-            if (!empty($db_data)) {
-                AffiliatesManager::update($affiliate->id, $db_data);
-            }
         }
 
         // Trigger action hook
@@ -537,42 +479,16 @@ class AffiliateManager
      */
     private function remove_affiliate_meta($user_id)
     {
-        delete_user_meta($user_id, self::META_KEY_STATUS);
-        delete_user_meta($user_id, self::META_KEY_CODE);
+        // Remove only user meta fields (status and code are in database table)
         delete_user_meta($user_id, self::META_KEY_REGISTERED_AT);
-        delete_user_meta($user_id, self::META_KEY_PAYMENT_EMAIL);
         delete_user_meta($user_id, self::META_KEY_PAYMENT_METHOD);
         delete_user_meta($user_id, self::META_KEY_WEBSITE);
         delete_user_meta($user_id, self::META_KEY_PHONE);
-        delete_user_meta($user_id, self::META_KEY_PROMOTION_METHOD);
         delete_user_meta($user_id, self::META_KEY_PAYPAL_EMAIL);
         delete_user_meta($user_id, self::META_KEY_BANK_DETAILS);
         delete_user_meta($user_id, 'dsa_affiliate_status_reason');
     }
 
-    /**
-     * Generate unique affiliate code
-     *
-     * @return string
-     */
-    private function generate_affiliate_code()
-    {
-        $prefix = 'DSA';
-        $code = '';
-        $max_attempts = 10;
-        $attempt = 0;
-
-        do {
-            $random = strtoupper(wp_generate_password(8, false));
-            $code = $prefix . $random;
-            $attempt++;
-
-            // Check if code already exists in user meta
-            $existing = $this->get_user_by_affiliate_code($code);
-        } while ($existing && $attempt < $max_attempts);
-
-        return $code;
-    }
 
     /**
      * Send status change notification email
@@ -622,10 +538,12 @@ Your affiliate application status has been updated to: %s', 'directorist-simple-
 
         if ($status === self::STATUS_ACTIVE) {
             $affiliate_code = $this->get_affiliate_code($user_id);
-            $message .= "\n\n" . sprintf(
-                __('Your affiliate code is: %s', 'directorist-simple-affiliate'),
-                $affiliate_code
-            );
+            if ($affiliate_code) {
+                $message .= "\n\n" . sprintf(
+                    __('Your affiliate code is: %s', 'directorist-simple-affiliate'),
+                    $affiliate_code
+                );
+            }
         }
 
         $message .= "\n\n" . __('Best regards,', 'directorist-simple-affiliate') . "\n" . __('Directorist Team', 'directorist-simple-affiliate');

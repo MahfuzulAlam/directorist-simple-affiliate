@@ -32,16 +32,12 @@ class AffiliatesTable
         $sql = "CREATE TABLE IF NOT EXISTS {$table_name} (
             id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
             user_id bigint(20) UNSIGNED NOT NULL,
-            affiliate_code varchar(255) NOT NULL,
             status enum('pending','active','suspended','rejected') NOT NULL DEFAULT 'pending',
-            payment_email varchar(255) DEFAULT NULL,
-            payment_method varchar(100) DEFAULT NULL,
             commission_rate decimal(5,2) DEFAULT NULL,
             created_at datetime NOT NULL,
             updated_at datetime NOT NULL,
             PRIMARY KEY (id),
-            UNIQUE KEY affiliate_code (affiliate_code),
-            KEY user_id (user_id),
+            UNIQUE KEY user_id (user_id),
             KEY status (status)
         ) {$charset_collate};";
 

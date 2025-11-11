@@ -2,13 +2,13 @@
 
 namespace DirectoristSimpleAffiliate\Database\Managers;
 
-use DirectoristSimpleAffiliate\Database\Tables\AffiliatesTable;
+use DirectoristSimpleAffiliate\Database\Tables\AffiliateCodesTable;
 
 /**
- * Manager class for affiliates table
+ * Manager class for affiliate_codes table
  * Handles read, write, and data retrieval operations
  */
-class AffiliatesManager
+class AffiliateCodesManager
 {
     /**
      * Get table name
@@ -17,11 +17,11 @@ class AffiliatesManager
      */
     protected static function get_table_name()
     {
-        return AffiliatesTable::get_table_name();
+        return AffiliateCodesTable::get_table_name();
     }
 
     /**
-     * Insert a new affiliate
+     * Insert a new affiliate code
      *
      * @param array $data
      * @return int|false The number of rows inserted, or false on error
@@ -32,9 +32,11 @@ class AffiliatesManager
         $table_name = self::get_table_name();
 
         $defaults = [
-            'status' => 'pending',
+            'type' => 'default',
+            'clicks' => 0,
+            'conversions' => 0,
+            'status' => 'active',
             'created_at' => current_time('mysql'),
-            'updated_at' => current_time('mysql'),
         ];
 
         $data = wp_parse_args($data, $defaults);
@@ -43,7 +45,7 @@ class AffiliatesManager
     }
 
     /**
-     * Update an affiliate
+     * Update an affiliate code
      *
      * @param int $id
      * @param array $data
@@ -53,8 +55,6 @@ class AffiliatesManager
     {
         global $wpdb;
         $table_name = self::get_table_name();
-
-        $data['updated_at'] = current_time('mysql');
 
         return $wpdb->update(
             $table_name,
@@ -66,7 +66,7 @@ class AffiliatesManager
     }
 
     /**
-     * Delete an affiliate
+     * Delete an affiliate code
      *
      * @param int $id
      * @return int|false The number of rows deleted, or false on error
@@ -80,7 +80,7 @@ class AffiliatesManager
     }
 
     /**
-     * Get affiliate by ID
+     * Get affiliate code by ID
      *
      * @param int $id
      * @return object|null
@@ -97,25 +97,74 @@ class AffiliatesManager
     }
 
     /**
-     * Get affiliate by user ID
+     * Get affiliate code by code string
      *
-     * @param int $user_id
+     * @param string $code
      * @return object|null
      */
-    public static function get_by_user_id($user_id)
+    public static function get_by_code($code)
     {
         global $wpdb;
         $table_name = self::get_table_name();
 
         return $wpdb->get_row($wpdb->prepare(
-            "SELECT * FROM {$table_name} WHERE user_id = %d",
-            $user_id
+            "SELECT * FROM {$table_name} WHERE code = %s",
+            $code
         ));
     }
 
+    /**
+     * Get codes by affiliate ID
+     *
+     * @param int $affiliate_id
+     * @param array $args
+     * @return array
+     */
+    public static function get_by_affiliate_id($affiliate_id, $args = [])
+    {
+        global $wpdb;
+        $table_name = self::get_table_name();
+
+        $defaults = [
+            'status' => '',
+            'type' => '',
+            'limit' => -1,
+            'offset' => 0,
+            'orderby' => 'created_at',
+            'order' => 'DESC',
+        ];
+
+        $args = wp_parse_args($args, $defaults);
+
+        $where = ["affiliate_id = %d"];
+        $where_values = [$affiliate_id];
+
+        if (!empty($args['status'])) {
+            $where[] = "status = %s";
+            $where_values[] = $args['status'];
+        }
+
+        if (!empty($args['type'])) {
+            $where[] = "type = %s";
+            $where_values[] = $args['type'];
+        }
+
+        $where_clause = 'WHERE ' . implode(' AND ', $where);
+        $limit_clause = $args['limit'] > 0 ? $wpdb->prepare("LIMIT %d OFFSET %d", $args['limit'], $args['offset']) : '';
+
+        $orderby = sanitize_sql_orderby("{$args['orderby']} {$args['order']}");
+        $order_clause = $orderby ? "ORDER BY {$orderby}" : '';
+
+        $query = $wpdb->prepare(
+            "SELECT * FROM {$table_name} {$where_clause} {$order_clause} {$limit_clause}",
+            $where_values
+        );
+
+        return $wpdb->get_results($query);
+    }
 
     /**
-     * Get all affiliates
+     * Get all affiliate codes
      *
      * @param array $args
      * @return array
@@ -126,10 +175,12 @@ class AffiliatesManager
         $table_name = self::get_table_name();
 
         $defaults = [
+            'affiliate_id' => 0,
             'status' => '',
+            'type' => '',
             'limit' => -1,
             'offset' => 0,
-            'orderby' => 'id',
+            'orderby' => 'created_at',
             'order' => 'DESC',
         ];
 
@@ -138,9 +189,19 @@ class AffiliatesManager
         $where = [];
         $where_values = [];
 
+        if ($args['affiliate_id'] > 0) {
+            $where[] = "affiliate_id = %d";
+            $where_values[] = $args['affiliate_id'];
+        }
+
         if (!empty($args['status'])) {
             $where[] = "status = %s";
             $where_values[] = $args['status'];
+        }
+
+        if (!empty($args['type'])) {
+            $where[] = "type = %s";
+            $where_values[] = $args['type'];
         }
 
         $where_clause = !empty($where) ? 'WHERE ' . implode(' AND ', $where) : '';
@@ -162,7 +223,7 @@ class AffiliatesManager
     }
 
     /**
-     * Count affiliates
+     * Count affiliate codes
      *
      * @param array $args
      * @return int
@@ -175,9 +236,19 @@ class AffiliatesManager
         $where = [];
         $where_values = [];
 
+        if (!empty($args['affiliate_id'])) {
+            $where[] = "affiliate_id = %d";
+            $where_values[] = $args['affiliate_id'];
+        }
+
         if (!empty($args['status'])) {
             $where[] = "status = %s";
             $where_values[] = $args['status'];
+        }
+
+        if (!empty($args['type'])) {
+            $where[] = "type = %s";
+            $where_values[] = $args['type'];
         }
 
         $where_clause = !empty($where) ? 'WHERE ' . implode(' AND ', $where) : '';
@@ -192,6 +263,40 @@ class AffiliatesManager
         }
 
         return (int) $wpdb->get_var($query);
+    }
+
+    /**
+     * Increment clicks for a code
+     *
+     * @param int $id
+     * @return int|false
+     */
+    public static function increment_clicks($id)
+    {
+        global $wpdb;
+        $table_name = self::get_table_name();
+
+        return $wpdb->query($wpdb->prepare(
+            "UPDATE {$table_name} SET clicks = clicks + 1 WHERE id = %d",
+            $id
+        ));
+    }
+
+    /**
+     * Increment conversions for a code
+     *
+     * @param int $id
+     * @return int|false
+     */
+    public static function increment_conversions($id)
+    {
+        global $wpdb;
+        $table_name = self::get_table_name();
+
+        return $wpdb->query($wpdb->prepare(
+            "UPDATE {$table_name} SET conversions = conversions + 1 WHERE id = %d",
+            $id
+        ));
     }
 }
 

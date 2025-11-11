@@ -148,23 +148,6 @@ if (!defined('ABSPATH')) {
 
                 <div class="dsa-form-row">
                     <div class="dsa-form-group">
-                        <label for="dsa_promotion_method" class="dsa-form-label">
-                            <?php esc_html_e('How will you promote Directorist?', 'directorist-simple-affiliate'); ?>
-                            <span class="dsa-required">*</span>
-                        </label>
-                        <textarea
-                            id="dsa_promotion_method"
-                            name="dsa_promotion_method"
-                            class="dsa-form-textarea"
-                            rows="5"
-                            placeholder="<?php esc_attr_e('Describe your marketing strategy, audience, and how you plan to promote Directorist...', 'directorist-simple-affiliate'); ?>"
-                            required
-                        ></textarea>
-                    </div>
-                </div>
-
-                <div class="dsa-form-row">
-                    <div class="dsa-form-group">
                         <label for="dsa_phone" class="dsa-form-label">
                             <?php esc_html_e('Phone Number', 'directorist-simple-affiliate'); ?>
                         </label>

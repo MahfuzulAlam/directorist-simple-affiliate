@@ -6,6 +6,7 @@ use DirectoristSimpleAffiliate\Database\Tables\AffiliatesTable;
 use DirectoristSimpleAffiliate\Database\Tables\AffiliateVisitsTable;
 use DirectoristSimpleAffiliate\Database\Tables\ReferralsTable;
 use DirectoristSimpleAffiliate\Database\Tables\PayoutsTable;
+use DirectoristSimpleAffiliate\Database\Tables\AffiliateCodesTable;
 
 /**
  * Database table manager
@@ -35,6 +36,9 @@ class TableManager
 
         // Create payouts table
         PayoutsTable::create($charset_collate);
+
+        // Create affiliate_codes table
+        AffiliateCodesTable::create($charset_collate);
     }
 
     /**
@@ -49,6 +53,7 @@ class TableManager
             AffiliateVisitsTable::get_table_name(),
             ReferralsTable::get_table_name(),
             PayoutsTable::get_table_name(),
+            AffiliateCodesTable::get_table_name(),
         ];
 
         foreach ($tables as $table) {

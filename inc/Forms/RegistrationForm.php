@@ -97,20 +97,12 @@ class RegistrationForm
             self::send_welcome_email($email, $username, $password, $full_name);
         }
 
-        // Prepare payment email based on payment method
-        $payment_email = '';
-        if ($_POST['dsa_payment_method'] === 'PayPal' && !empty($_POST['dsa_paypal_email'])) {
-            $payment_email = sanitize_email($_POST['dsa_paypal_email']);
-        }
-
         // Prepare affiliate registration data
         $affiliate_data = [
             'status' => 'pending',
-            'payment_email' => $payment_email,
             'payment_method' => sanitize_text_field($_POST['dsa_payment_method']),
             'website' => isset($_POST['dsa_website']) ? esc_url_raw($_POST['dsa_website']) : '',
             'phone' => isset($_POST['dsa_phone']) ? sanitize_text_field($_POST['dsa_phone']) : '',
-            'promotion_method' => isset($_POST['dsa_promotion_method']) ? sanitize_textarea_field($_POST['dsa_promotion_method']) : '',
         ];
 
         // Add payment method specific data
@@ -140,7 +132,8 @@ class RegistrationForm
         }
 
         // Send notification email to admin
-        self::send_admin_notification($user_id, $result['affiliate_code']);
+        $affiliate_code = $affiliate_manager->get_affiliate_code($user_id);
+        self::send_admin_notification($user_id, $affiliate_code ? $affiliate_code : 'N/A');
 
         return [
             'success' => true,
@@ -198,10 +191,6 @@ class RegistrationForm
             $errors[] = __('Please enter a valid URL.', 'directorist-simple-affiliate');
         }
 
-        // Promotion Method
-        if (empty($data['dsa_promotion_method'])) {
-            $errors[] = __('Please describe how you will promote Directorist.', 'directorist-simple-affiliate');
-        }
 
         // Terms & Conditions
         if (empty($data['dsa_terms'])) {

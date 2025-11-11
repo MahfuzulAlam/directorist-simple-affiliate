@@ -164,6 +164,9 @@ class AffiliateRequestsPage
     private static function render_affiliate_card($affiliate, $affiliate_manager)
     {
         $user = get_userdata($affiliate['user_id']);
+        
+        // Get affiliate code from separate table
+        $affiliate_code = $affiliate_manager->get_affiliate_code($affiliate['user_id']);
         ?>
         <div class="dsa-affiliate-card" data-user-id="<?php echo esc_attr($affiliate['user_id']); ?>">
             <div class="dsa-card-header">
@@ -175,31 +178,35 @@ class AffiliateRequestsPage
                         <?php echo esc_html(date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($affiliate['registered_at']))); ?>
                     </p>
                 </div>
+                <?php if ($affiliate_code): ?>
                 <div class="dsa-affiliate-code">
                     <strong><?php esc_html_e('Affiliate Code:', 'directorist-simple-affiliate'); ?></strong>
-                    <code><?php echo esc_html($affiliate['affiliate_code']); ?></code>
+                    <code><?php echo esc_html($affiliate_code); ?></code>
                 </div>
+                <?php endif; ?>
             </div>
 
             <div class="dsa-card-body">
                 <div class="dsa-info-grid">
-                    <div class="dsa-info-item">
-                        <label><?php esc_html_e('Payment Method:', 'directorist-simple-affiliate'); ?></label>
-                        <span><?php echo esc_html($affiliate['payment_method']); ?></span>
-                    </div>
-
-                    <?php if ($affiliate['payment_method'] === 'PayPal' && !empty($affiliate['paypal_email'])): ?>
+                    <?php if (!empty($affiliate['payment_method'])): ?>
                         <div class="dsa-info-item">
-                            <label><?php esc_html_e('PayPal Email:', 'directorist-simple-affiliate'); ?></label>
-                            <span><?php echo esc_html($affiliate['paypal_email']); ?></span>
+                            <label><?php esc_html_e('Payment Method:', 'directorist-simple-affiliate'); ?></label>
+                            <span><?php echo esc_html($affiliate['payment_method']); ?></span>
                         </div>
-                    <?php endif; ?>
 
-                    <?php if ($affiliate['payment_method'] === 'Bank Transfer' && !empty($affiliate['bank_details'])): ?>
-                        <div class="dsa-info-item dsa-full-width">
-                            <label><?php esc_html_e('Bank Details:', 'directorist-simple-affiliate'); ?></label>
-                            <div class="dsa-bank-details"><?php echo nl2br(esc_html($affiliate['bank_details'])); ?></div>
-                        </div>
+                        <?php if ($affiliate['payment_method'] === 'PayPal' && !empty($affiliate['paypal_email'])): ?>
+                            <div class="dsa-info-item">
+                                <label><?php esc_html_e('PayPal Email:', 'directorist-simple-affiliate'); ?></label>
+                                <span><?php echo esc_html($affiliate['paypal_email']); ?></span>
+                            </div>
+                        <?php endif; ?>
+
+                        <?php if ($affiliate['payment_method'] === 'Bank Transfer' && !empty($affiliate['bank_details'])): ?>
+                            <div class="dsa-info-item dsa-full-width">
+                                <label><?php esc_html_e('Bank Details:', 'directorist-simple-affiliate'); ?></label>
+                                <div class="dsa-bank-details"><?php echo nl2br(esc_html($affiliate['bank_details'])); ?></div>
+                            </div>
+                        <?php endif; ?>
                     <?php endif; ?>
 
                     <?php if (!empty($affiliate['website'])): ?>
@@ -216,12 +223,6 @@ class AffiliateRequestsPage
                         </div>
                     <?php endif; ?>
 
-                    <?php if (!empty($affiliate['promotion_method'])): ?>
-                        <div class="dsa-info-item dsa-full-width">
-                            <label><?php esc_html_e('How will they promote Directorist?', 'directorist-simple-affiliate'); ?></label>
-                            <div class="dsa-promotion-method"><?php echo nl2br(esc_html($affiliate['promotion_method'])); ?></div>
-                        </div>
-                    <?php endif; ?>
                 </div>
             </div>
 
