@@ -1,0 +1,422 @@
+/**
+ * Directorist Simple Affiliate - Frontend Dashboard Styles
+ */
+
+.dsa-dashboard-tab {
+    padding: 20px 0;
+}
+
+.dsa-dashboard-header {
+    margin-bottom: 30px;
+}
+
+.dsa-dashboard-header h2 {
+    margin: 0 0 10px 0;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.dsa-description {
+    color: #646970;
+    font-size: 14px;
+    margin: 0;
+}
+
+.dsa-default-code-section {
+    background: #f6f7f7;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.dsa-default-code-section h3 {
+    margin: 0 0 15px 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.dsa-code-display {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.dsa-code-value {
+    flex: 1;
+    padding: 10px 15px;
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    border-radius: 3px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #2271b1;
+    font-family: monospace;
+}
+
+.dsa-copy-btn,
+.dsa-copy-url-btn,
+.dsa-copy-code-btn {
+    padding: 8px 15px;
+    background: #2271b1;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+.dsa-copy-btn:hover,
+.dsa-copy-url-btn:hover,
+.dsa-copy-code-btn:hover {
+    background: #135e96;
+}
+
+.dsa-url-display {
+    margin-top: 15px;
+}
+
+.dsa-url-display label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.dsa-url-wrapper {
+    display: flex;
+    gap: 10px;
+}
+
+.dsa-affiliate-url {
+    flex: 1;
+    padding: 10px 15px;
+    border: 1px solid #ccd0d4;
+    border-radius: 3px;
+    font-size: 14px;
+    background: #fff;
+}
+
+.dsa-codes-section {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+    padding: 20px;
+}
+
+.dsa-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.dsa-section-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.dsa-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.dsa-btn-primary {
+    background: #2271b1;
+    color: #fff;
+}
+
+.dsa-btn-primary:hover {
+    background: #135e96;
+    color: #fff;
+}
+
+.dsa-btn-secondary {
+    background: #f0f0f1;
+    color: #2c3338;
+}
+
+.dsa-btn-secondary:hover {
+    background: #dcdcde;
+}
+
+.dsa-btn-small {
+    padding: 5px 10px;
+    font-size: 12px;
+    margin-right: 5px;
+}
+
+.dsa-generate-form {
+    background: #f6f7f7;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.dsa-form-row {
+    margin-bottom: 15px;
+}
+
+.dsa-form-row label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.dsa-form-input,
+.dsa-form-select,
+.dsa-form-textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #8c8f94;
+    border-radius: 3px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.dsa-form-input:focus,
+.dsa-form-select:focus,
+.dsa-form-textarea:focus {
+    border-color: #2271b1;
+    box-shadow: 0 0 0 1px #2271b1;
+    outline: none;
+}
+
+.dsa-form-textarea {
+    resize: vertical;
+    font-family: inherit;
+}
+
+.dsa-form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.dsa-codes-list {
+    margin-top: 20px;
+}
+
+.dsa-empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #646970;
+}
+
+.dsa-codes-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.dsa-codes-table th,
+.dsa-codes-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ccd0d4;
+}
+
+.dsa-codes-table th {
+    background: #f6f7f7;
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.dsa-codes-table td code {
+    font-family: monospace;
+    font-size: 14px;
+    color: #2271b1;
+    font-weight: 600;
+}
+
+.dsa-status-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.dsa-status-active {
+    background: #d4edda;
+    color: #155724;
+}
+
+.dsa-status-inactive {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.dsa-status-expired {
+    background: #fff3cd;
+    color: #856404;
+}
+
+/* Settings Form */
+.dsa-settings-form-wrapper {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+    padding: 30px;
+    margin-top: 20px;
+}
+
+.dsa-settings-form {
+    max-width: 800px;
+}
+
+.dsa-form-section {
+    margin-bottom: 30px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid #ccd0d4;
+}
+
+.dsa-form-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.dsa-section-title {
+    margin: 0 0 20px 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #1d2327;
+}
+
+.dsa-form-row {
+    margin-bottom: 20px;
+}
+
+.dsa-form-row:last-child {
+    margin-bottom: 0;
+}
+
+.dsa-form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #1d2327;
+}
+
+.dsa-required {
+    color: #d63638;
+    margin-left: 3px;
+}
+
+.dsa-form-input,
+.dsa-form-select,
+.dsa-form-textarea {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #8c8f94;
+    border-radius: 3px;
+    font-size: 14px;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+}
+
+.dsa-form-input:focus,
+.dsa-form-select:focus,
+.dsa-form-textarea:focus {
+    border-color: #2271b1;
+    box-shadow: 0 0 0 1px #2271b1;
+    outline: none;
+}
+
+.dsa-form-input.dsa-field-error,
+.dsa-form-textarea.dsa-field-error {
+    border-color: #d63638;
+}
+
+.dsa-form-textarea {
+    resize: vertical;
+    font-family: inherit;
+    min-height: 120px;
+}
+
+.dsa-form-help {
+    display: block;
+    margin-top: 5px;
+    font-size: 13px;
+    color: #646970;
+    font-style: italic;
+}
+
+.dsa-form-actions {
+    margin-top: 30px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.dsa-form-message {
+    padding: 10px 15px;
+    border-radius: 3px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.dsa-message-success {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.dsa-message-error {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* Responsive */
+@media (max-width: 782px) {
+    .dsa-section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .dsa-code-display,
+    .dsa-url-wrapper {
+        flex-direction: column;
+    }
+
+    .dsa-codes-table {
+        font-size: 12px;
+    }
+
+    .dsa-codes-table th,
+    .dsa-codes-table td {
+        padding: 8px;
+    }
+
+    .dsa-settings-form-wrapper {
+        padding: 20px;
+    }
+
+    .dsa-form-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .dsa-form-actions .dsa-btn {
+        width: 100%;
+    }
+}
+

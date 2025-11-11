@@ -240,6 +240,11 @@ class AffiliateManager
         // Trigger action hook
         do_action('dsa_affiliate_status_changed', $user_id, $old_status, $status, $reason);
 
+        // Create default affiliate code when approved
+        if ($status === self::STATUS_ACTIVE && $old_status !== self::STATUS_ACTIVE) {
+            $this->create_default_affiliate_code($user_id);
+        }
+
         // Send email notification
         $this->send_status_change_notification($user_id, $status, $reason);
 
@@ -489,6 +494,62 @@ class AffiliateManager
         delete_user_meta($user_id, 'dsa_affiliate_status_reason');
     }
 
+
+    /**
+     * Create default affiliate code for approved affiliate
+     *
+     * @param int $user_id User ID
+     * @return bool|WP_Error
+     */
+    private function create_default_affiliate_code($user_id)
+    {
+        $affiliate = AffiliatesManager::get_by_user_id($user_id);
+        if (!$affiliate) {
+            return false;
+        }
+
+        // Check if default code already exists
+        $existing_codes = AffiliateCodesManager::get_by_affiliate_id($affiliate->id, ['type' => 'default', 'limit' => 1]);
+        if (!empty($existing_codes)) {
+            return true; // Default code already exists
+        }
+
+        // Generate unique code
+        $code = $this->generate_unique_code();
+
+        // Insert default code
+        $data = [
+            'affiliate_id' => $affiliate->id,
+            'code' => $code,
+            'type' => 'default',
+            'status' => 'active',
+        ];
+
+        $result = AffiliateCodesManager::insert($data);
+        return $result !== false;
+    }
+
+    /**
+     * Generate unique affiliate code
+     *
+     * @return string
+     */
+    private function generate_unique_code()
+    {
+        $prefix = 'DSA';
+        $max_attempts = 10;
+        $attempt = 0;
+
+        do {
+            $random = strtoupper(wp_generate_password(8, false));
+            $code = $prefix . $random;
+            $attempt++;
+
+            $existing = AffiliateCodesManager::get_by_code($code);
+        } while ($existing && $attempt < $max_attempts);
+
+        return $code;
+    }
 
     /**
      * Send status change notification email
