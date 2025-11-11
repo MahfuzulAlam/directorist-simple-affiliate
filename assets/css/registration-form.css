@@ -1,0 +1,198 @@
+/**
+ * Directorist Simple Affiliate - Registration Form Styles
+ */
+
+.dsa-registration-form-wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.dsa-registration-form-container {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 40px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.dsa-form-title {
+    font-size: 28px;
+    font-weight: 600;
+    margin: 0 0 10px 0;
+    color: #333;
+}
+
+.dsa-form-description {
+    font-size: 16px;
+    color: #666;
+    margin: 0 0 30px 0;
+    line-height: 1.6;
+}
+
+.dsa-form-message {
+    padding: 15px 20px;
+    border-radius: 5px;
+    margin-bottom: 25px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.dsa-form-message--success {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+}
+
+.dsa-form-message--error {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+}
+
+.dsa-registration-form {
+    margin: 0;
+}
+
+.dsa-form-row {
+    margin-bottom: 25px;
+}
+
+.dsa-form-group {
+    width: 100%;
+}
+
+.dsa-form-label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: #333;
+    font-size: 14px;
+}
+
+.dsa-required {
+    color: #e74c3c;
+    margin-left: 3px;
+}
+
+.dsa-form-input,
+.dsa-form-select,
+.dsa-form-textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    font-family: inherit;
+    transition: border-color 0.3s ease;
+    box-sizing: border-box;
+}
+
+.dsa-form-input:focus,
+.dsa-form-select:focus,
+.dsa-form-textarea:focus {
+    outline: none;
+    border-color: #0073aa;
+    box-shadow: 0 0 0 2px rgba(0, 115, 170, 0.1);
+}
+
+.dsa-form-input[readonly] {
+    background-color: #f5f5f5;
+    cursor: not-allowed;
+}
+
+.dsa-form-textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.dsa-form-help {
+    display: block;
+    margin-top: 5px;
+    font-size: 12px;
+    color: #666;
+    font-style: italic;
+}
+
+.dsa-form-checkbox-label {
+    display: flex;
+    align-items: flex-start;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.dsa-form-checkbox {
+    margin-right: 10px;
+    margin-top: 3px;
+    flex-shrink: 0;
+    cursor: pointer;
+}
+
+.dsa-form-checkbox-label span {
+    color: #333;
+}
+
+.dsa-form-submit {
+    background-color: #0073aa;
+    color: #fff;
+    border: none;
+    padding: 14px 30px;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+
+.dsa-form-submit:hover {
+    background-color: #005a87;
+}
+
+.dsa-form-submit:active {
+    transform: translateY(1px);
+}
+
+.dsa-form-submit:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.dsa-field-error {
+    border-color: #e74c3c !important;
+    box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.1) !important;
+}
+
+.dsa-payment-field {
+    transition: opacity 0.3s ease, max-height 0.3s ease;
+    overflow: hidden;
+}
+
+.dsa-payment-field[style*="display: none"] {
+    max-height: 0;
+    opacity: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.dsa-payment-field:not([style*="display: none"]) {
+    max-height: 500px;
+    opacity: 1;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .dsa-registration-form-wrapper {
+        padding: 15px;
+    }
+
+    .dsa-registration-form-container {
+        padding: 25px 20px;
+    }
+
+    .dsa-form-title {
+        font-size: 24px;
+    }
+}
+

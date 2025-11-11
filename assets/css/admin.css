@@ -1,0 +1,236 @@
+/**
+ * Directorist Simple Affiliate - Admin Styles
+ */
+
+.dsa-affiliate-requests {
+    max-width: 1200px;
+}
+
+.dsa-requests-list {
+    display: grid;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.dsa-affiliate-card {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+}
+
+.dsa-card-header {
+    background: #f6f7f7;
+    border-bottom: 1px solid #ccd0d4;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.dsa-user-info h3 {
+    margin: 0 0 5px 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.dsa-user-email {
+    margin: 5px 0;
+    color: #646970;
+    font-size: 14px;
+}
+
+.dsa-registered-date {
+    margin: 5px 0 0 0;
+    font-size: 13px;
+    color: #646970;
+}
+
+.dsa-affiliate-code {
+    text-align: right;
+}
+
+.dsa-affiliate-code strong {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 13px;
+    color: #646970;
+}
+
+.dsa-affiliate-code code {
+    display: inline-block;
+    padding: 6px 12px;
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    border-radius: 3px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #2271b1;
+}
+
+.dsa-card-body {
+    padding: 20px;
+}
+
+.dsa-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.dsa-info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.dsa-info-item.dsa-full-width {
+    grid-column: 1 / -1;
+}
+
+.dsa-info-item label {
+    font-weight: 600;
+    font-size: 13px;
+    color: #646970;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.dsa-info-item span {
+    font-size: 14px;
+    color: #1d2327;
+}
+
+.dsa-info-item a {
+    color: #2271b1;
+    text-decoration: none;
+}
+
+.dsa-info-item a:hover {
+    text-decoration: underline;
+}
+
+.dsa-bank-details,
+.dsa-promotion-method {
+    background: #f6f7f7;
+    padding: 12px;
+    border-radius: 3px;
+    border: 1px solid #ccd0d4;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #1d2327;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.dsa-card-footer {
+    background: #f6f7f7;
+    border-top: 1px solid #ccd0d4;
+    padding: 20px;
+}
+
+.dsa-action-form {
+    margin: 0;
+}
+
+.dsa-comment-field {
+    margin-bottom: 15px;
+}
+
+.dsa-comment-field label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.dsa-comment-textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #8c8f94;
+    border-radius: 3px;
+    font-size: 14px;
+    font-family: inherit;
+    resize: vertical;
+    box-sizing: border-box;
+}
+
+.dsa-comment-textarea:focus {
+    border-color: #2271b1;
+    box-shadow: 0 0 0 1px #2271b1;
+    outline: none;
+}
+
+.dsa-action-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.dsa-action-buttons .button {
+    margin: 0;
+}
+
+.dsa-approve-btn {
+    background: #00a32a;
+    border-color: #00a32a;
+    color: #fff;
+}
+
+.dsa-approve-btn:hover {
+    background: #008a20;
+    border-color: #008a20;
+    color: #fff;
+}
+
+.dsa-reject-btn {
+    background: #d63638;
+    border-color: #d63638;
+    color: #fff;
+}
+
+.dsa-reject-btn:hover {
+    background: #b32d2e;
+    border-color: #b32d2e;
+    color: #fff;
+}
+
+.dsa-submit-action {
+    background: #2271b1;
+    border-color: #2271b1;
+    color: #fff;
+}
+
+.dsa-submit-action:hover {
+    background: #135e96;
+    border-color: #135e96;
+    color: #fff;
+}
+
+/* Responsive */
+@media (max-width: 782px) {
+    .dsa-card-header {
+        flex-direction: column;
+    }
+
+    .dsa-affiliate-code {
+        text-align: left;
+    }
+
+    .dsa-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .dsa-action-buttons {
+        flex-direction: column;
+    }
+
+    .dsa-action-buttons .button {
+        width: 100%;
+        text-align: center;
+    }
+}
+

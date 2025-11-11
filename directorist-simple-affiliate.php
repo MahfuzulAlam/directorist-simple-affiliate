@@ -44,6 +44,7 @@ add_action('plugins_loaded', 'dsa_init');
 
 // Activation hook
 register_activation_hook(__FILE__, function() {
+    // Create database tables
     \DirectoristSimpleAffiliate\Database\TableManager::create_tables();
 });
 
