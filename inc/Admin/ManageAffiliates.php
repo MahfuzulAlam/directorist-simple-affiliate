@@ -7,7 +7,7 @@ use DirectoristSimpleAffiliate\Core\AffiliateManager;
 /**
  * Admin page for managing affiliate requests
  */
-class AffiliateRequestsPage
+class ManageAffiliates
 {
     /**
      * Initialize the admin page
@@ -145,7 +145,8 @@ class AffiliateRequestsPage
         $current_tab = self::get_current_tab();
         $tabs = [
             'overview' => __('Overview', 'directorist-simple-affiliate'),
-            'requests' => __('Affiliate Requests', 'directorist-simple-affiliate'),
+            'requests' => __('Requests', 'directorist-simple-affiliate'),
+            'tracking' => __('Tracking', 'directorist-simple-affiliate'),
         ];
 
         ?>
@@ -169,6 +170,11 @@ class AffiliateRequestsPage
                         self::render_requests_tab();
                         break;
                     case 'overview':
+                        self::render_overview_tab();
+                        break;
+                    case 'tracking':
+                        self::render_tracking_tab();
+                        break;
                     default:
                         self::render_overview_tab();
                         break;
@@ -205,6 +211,17 @@ class AffiliateRequestsPage
         $affiliates = $affiliate_manager->get_affiliates('pending');
 
         $template_path = DSA_PLUGIN_DIR . 'templates/admin/affiliate-requests-tab.php';
+        if (file_exists($template_path)) {
+            include $template_path;
+        }
+    }
+
+    /**
+     * Render Tracking tab
+     */
+    private static function render_tracking_tab()
+    {
+        $template_path = DSA_PLUGIN_DIR . 'templates/admin/tracking-tab.php';
         if (file_exists($template_path)) {
             include $template_path;
         }

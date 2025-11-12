@@ -3,7 +3,7 @@
 namespace DirectoristSimpleAffiliate\Core;
 
 use DirectoristSimpleAffiliate\Forms\RegistrationFormShortcode;
-use DirectoristSimpleAffiliate\Admin\AffiliateRequestsPage;
+use DirectoristSimpleAffiliate\Admin\ManageAffiliates;
 use DirectoristSimpleAffiliate\Frontend\DashboardTab;
 use DirectoristSimpleAffiliate\Core\Tracking;
 use DirectoristSimpleAffiliate\Core\Conversion;
@@ -22,7 +22,7 @@ class Plugin
         RegistrationFormShortcode::init();
 
         // Initialize admin page
-        AffiliateRequestsPage::init();
+        ManageAffiliates::init();
 
         // Initialize frontend dashboard tab
         DashboardTab::init();

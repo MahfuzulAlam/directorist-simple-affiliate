@@ -23,7 +23,7 @@ $affiliates = $affiliate_manager->get_affiliates('pending');
         <?php else: ?>
             <div class="dsa-requests-list">
                 <?php foreach ($affiliates as $affiliate): ?>
-                    <?php \DirectoristSimpleAffiliate\Admin\AffiliateRequestsPage::render_affiliate_card($affiliate, $affiliate_manager); ?>
+                    <?php \DirectoristSimpleAffiliate\Admin\ManageAffiliates::render_affiliate_card($affiliate, $affiliate_manager); ?>
                 <?php endforeach; ?>
             </div>
         <?php endif; ?>
