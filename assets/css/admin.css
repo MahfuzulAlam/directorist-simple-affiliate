@@ -74,6 +74,193 @@
     border-left: 4px solid #2271b1;
 }
 
+/* Tracking Overview Styles */
+.dsa-tracking-overview {
+    padding: 20px 0;
+}
+
+.dsa-tracking-header {
+    margin-bottom: 25px;
+}
+
+.dsa-tracking-header h2 {
+    margin: 0 0 10px 0;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.dsa-tracking-filters {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.dsa-filters-form {
+    margin: 0;
+}
+
+.dsa-filters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    align-items: end;
+}
+
+.dsa-filter-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.dsa-filter-item label {
+    font-weight: 600;
+    font-size: 13px;
+    color: #1d2327;
+}
+
+.dsa-filter-select,
+.dsa-filter-input {
+    padding: 6px 10px;
+    border: 1px solid #8c8f94;
+    border-radius: 3px;
+    font-size: 14px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.dsa-filter-actions {
+    display: flex;
+    gap: 10px;
+    flex-direction: row;
+    align-items: center;
+}
+
+.dsa-tracking-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.dsa-stat-card {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+    padding: 20px;
+    text-align: center;
+}
+
+.dsa-stat-value {
+    font-size: 32px;
+    font-weight: 600;
+    color: #2271b1;
+    margin-bottom: 5px;
+}
+
+.dsa-stat-label {
+    font-size: 14px;
+    color: #646970;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.dsa-tracking-table-wrapper {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.dsa-visits-table {
+    margin: 0;
+}
+
+.dsa-visits-table th {
+    font-weight: 600;
+    background: #f6f7f7;
+}
+
+.dsa-visits-table td {
+    vertical-align: middle;
+}
+
+.dsa-visits-table .column-date {
+    width: 150px;
+}
+
+.dsa-visits-table .column-affiliate {
+    width: 200px;
+}
+
+.dsa-visits-table .column-code {
+    width: 120px;
+}
+
+.dsa-visits-table .column-ip {
+    width: 120px;
+}
+
+.dsa-visits-table .column-status {
+    width: 120px;
+}
+
+.dsa-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.dsa-badge-success {
+    background: #d4edda;
+    color: #155724;
+}
+
+.dsa-badge-default {
+    background: #f0f0f1;
+    color: #646970;
+}
+
+.dsa-muted {
+    color: #646970;
+    font-style: italic;
+}
+
+.dsa-pagination {
+    padding: 15px;
+    text-align: center;
+    border-top: 1px solid #ccd0d4;
+}
+
+.dsa-pagination .page-numbers {
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 0 2px;
+    border: 1px solid #ccd0d4;
+    border-radius: 3px;
+    text-decoration: none;
+    color: #2271b1;
+}
+
+.dsa-pagination .page-numbers.current {
+    background: #2271b1;
+    color: #fff;
+    border-color: #2271b1;
+}
+
+.dsa-pagination .page-numbers:hover {
+    background: #f6f7f7;
+}
+
+.dsa-empty-state {
+    padding: 40px 20px;
+    text-align: center;
+    color: #646970;
+}
+
 .dsa-requests-list {
     display: grid;
     gap: 20px;

@@ -15,7 +15,7 @@ class AffiliateVisitsManager
      *
      * @return string
      */
-    protected static function get_table_name()
+    public static function get_table_name()
     {
         return AffiliateVisitsTable::get_table_name();
     }

@@ -42,8 +42,10 @@ class AffiliateVisitsTable
             PRIMARY KEY (id),
             KEY affiliate_id (affiliate_id),
             KEY code_id (code_id),
+            KEY ip_address (ip_address),
             KEY converted (converted),
-            KEY created_at (created_at)
+            KEY created_at (created_at),
+            KEY affiliate_ip (affiliate_id, ip_address, created_at)
         ) {$charset_collate};";
 
         dbDelta($sql);

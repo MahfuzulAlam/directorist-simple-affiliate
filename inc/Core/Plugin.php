@@ -5,6 +5,8 @@ namespace DirectoristSimpleAffiliate\Core;
 use DirectoristSimpleAffiliate\Forms\RegistrationFormShortcode;
 use DirectoristSimpleAffiliate\Admin\AffiliateRequestsPage;
 use DirectoristSimpleAffiliate\Frontend\DashboardTab;
+use DirectoristSimpleAffiliate\Core\Tracking;
+use DirectoristSimpleAffiliate\Core\Conversion;
 
 /**
  * Main plugin class
@@ -24,6 +26,12 @@ class Plugin
 
         // Initialize frontend dashboard tab
         DashboardTab::init();
+
+        // Initialize tracking system
+        Tracking::init();
+
+        // Initialize conversion tracking
+        Conversion::init();
 
         // Enqueue frontend dashboard assets
         add_action('wp_enqueue_scripts', [__CLASS__, 'enqueue_frontend_assets']);
